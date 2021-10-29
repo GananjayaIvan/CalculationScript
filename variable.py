@@ -7,7 +7,7 @@ import pandas as pd
 
 
 #Directory read file dan result
-directory = os.path.dirname(os.path.abspath(__file__))
+directory = #sampleLocation
 path = directory + '/.csv_files'
 path_result = directory + '/Result'
 extension = 'csv'
