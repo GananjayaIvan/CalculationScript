@@ -37,7 +37,7 @@ for i in range (0,banyakData):
         csv_reader = csv.reader (csv_file)
         #Function untuk membuat isi data unique
         for row in csv_reader:
-            if row[3] in search_for:
+            if row[3] not in nonErrorResponseCode:
                 totalError = totalError + 1
     csv_file.close()
 
