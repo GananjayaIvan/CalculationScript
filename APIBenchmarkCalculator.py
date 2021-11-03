@@ -4,23 +4,6 @@ result = glob.glob('*.{}'.format(extension))
 banyakData = int(len(result))
 
 os.chdir(path_result)
-
-#Make Results.html file
-a = {
-"Test No." : [" File Name "," totalRequest ", " totalSuccessRequest "," totalFailedRequest " , " totalHit "," Transaction Per Second "," Jenis Error "]
-}
-data = ""
-for k in a:
-    data += "<td width = 200px>" + k + "</td>"
-    for d in a[k]:
-        data += "<td width = 200px>" + d + "</td>"
-    data += "<tr width = 200px>"
-
-
-    data = "<table border=1;>" + data + "<table>"
-    with open("Results.html", "a") as file:
-        file.write(data)
-
 for i in range (0,banyakData):
     os.chdir(path)
     print(" ========================  Hasil Calculation ======================== " + result[i])
@@ -45,10 +28,9 @@ for i in range (0,banyakData):
                 totalRequestBerhasil = totalRequestBerhasil + 1
             elif(line [7] == "false"):
                 totalRequestGagal = totalRequestGagal + 1
-    csv_file.close()
-        
-    
-    
+    successRate = (totalRequestBerhasil / (totalRequestBerhasil+totalRequestGagal)) * 100 
+    failureRate = (totalRequestGagal / (totalRequestBerhasil+totalRequestGagal)) * 100
+
     #TotalError
     totalError = 0
     with open(result[i], 'r') as csv_file:
@@ -59,26 +41,13 @@ for i in range (0,banyakData):
                 totalError = totalError + 1
     csv_file.close()
 
-    #Jenis Error
-    jenisError = []
-    with open(result[i], 'r') as csv_file:
-        csv_reader = csv.reader (csv_file)
-        for row in csv_reader:
-            if row[3] in search_for:
-            #Function untuk membuat isi data unique if(Data tidak ada di list jenisError) -> Append
-                if row[3] not in jenisError:
-                    jenisError.append(row[3])
-    csv_file.close()
-
-    separator = ", " 
-    end = ""
-    jenisError = separator.join(jenisError)
-
     #Total Hit
     listAllThreads = []
     pointerX = ()
     TotalHit = 0
     with open(result[i], 'r') as csv_file:
+
+
     #Membuat List baru untuk All Threads
         csv_reader = csv.reader (csv_file)
         for line in csv_reader:
@@ -113,9 +82,12 @@ for i in range (0,banyakData):
     #Timestamp formatnya adalah unix, mili second
     time = maximum - minimum
     time = time/1000
+    if time == 0:
+        time = 1
     transaction = lines
     TPS = banyakRequest/time
     
+
     #PrintOutput
     print('Total Request yang ditemukan : ' + str(banyakRequest))
     print('Total Request Berhasil : ' + str(totalRequestBerhasil))
@@ -126,6 +98,22 @@ for i in range (0,banyakData):
     print('Transaction per Second : ' + str(TPS))
     print("\n")
 
+
+    #Jenis Error
+    errorChecker = str()
+    jenisError = []
+    with open(result[i], 'r') as csv_file:
+        csv_reader = csv.reader (csv_file)
+        for row in csv_reader:
+            errorChecker = row[3]
+            #Function untuk membuat isi data unique if(Data tidak ada di list jenisError) -> Append
+            if errorChecker not in jenisError and errorChecker not in nonErrorResponseCode:
+                jenisError.append(errorChecker)
+    csv_file.close()
+    separator = ", " 
+    end = ""
+    jenisError = separator.join(jenisError)
+
     #Error Counter
     ErrorCount = []
     pointerX = ()
@@ -133,144 +121,54 @@ for i in range (0,banyakData):
         csv_reader = csv.reader (csv_file)
         for line in csv_reader:
             pointerX = line[3]
-            ErrorCount.append(pointerX)
+            if pointerX not in nonErrorResponseCode:
+                ErrorCount.append(pointerX)
+        listError = (Counter(ErrorCount))
+        if(len(listError) != 0):
+            print("==========Error Counter==========")
+            for key, value in listError.items():
+                print ("Error Code: " + str(key) + " Error Counted: " + str(value))
+        print("\n")
     csv_file.close()
-    
-    error400 = 0
-    error401 = 0
-    error402 = 0
-    error403 = 0
-    error404 = 0
-    error405 = 0
-    error406 = 0
-    error407 = 0
-    error408 = 0
-    error409 = 0
-    error410 = 0
-    error502 = 0
-    errornonHTTP = 0
 
-    error400 = ErrorCount.count('400')
-    error401 = ErrorCount.count('401')
-    error402 = ErrorCount.count('402')
-    error403 = ErrorCount.count('403')
-    error404 = ErrorCount.count('404')
-    error405 = ErrorCount.count('405')
-    error406 = ErrorCount.count('406')
-    error407 = ErrorCount.count('407')
-    error408 = ErrorCount.count('408')
-    error409 = ErrorCount.count('409')
-    error410 = ErrorCount.count('410')
-    error502 = ErrorCount.count('502')
-    errornonHTTP = ErrorCount.count('nonHTTP')
-    
-    print("========== Error Counter ==========")
-    print("Error 400 : " + str(error400))
-    print("Error 401 : " + str(error401))
-    print("Error 402 : " + str(error402))
-    print("Error 403 : " + str(error403))
-    print("Error 404 : " + str(error404))
-    print("Error 405 : " + str(error405))
-    print("Error 406 : " + str(error406))
-    print("Error 407 : " + str(error407))
-    print("Error 408 : " + str(error408))
-    print("Error 409 : " + str(error409))
-    print("Error 410 : " + str(error410))
-    print("Error 502 : " + str(error502))
+    #Dictionary yang akan di save ke json dan csv
+    dictionary_json ={
+    'name' : str(namaFile),
+    'totalRequest' : str(banyakRequest), 
+    'totalSuccessRequest' : str(totalRequestBerhasil), 
+    'totalFailedRequest' : str(totalRequestGagal), 
+    'totalError' : str(totalError), 
+    'totalHit' : str(TotalHit), 
+    'jenisError' : str(jenisError), 
+    'tps' : str(TPS), 
+    'successRate' : str(successRate) + '%',
+    'failureRate' : str(failureRate)+ '%',
+    'errors': [
+    listError
+    ]
+        },
 
-    
+    dictionary_csv ={
+    'name' : str(namaFile),
+    'totalRequest' : str(banyakRequest), 
+    'totalSuccessRequest' : str(totalRequestBerhasil), 
+    'totalFailedRequest' : str(totalRequestGagal), 
+    'totalError' : str(totalError), 
+    'totalHit' : str(TotalHit), 
+    'jenisError' : str(jenisError), 
+    'tps' : str(TPS), 
+        },
+
 
     os.chdir(path_result)
-    dictionary ={
-'name' : str(namaFile),
-'totalRequest' : str(banyakRequest), 
-'totalSuccessRequest' : str(totalRequestBerhasil), 
-'totalFailedRequest' : str(totalRequestGagal), 
-'totalError' : str(totalError), 
-'totalHit' : str(TotalHit), 
-'jenisError' : str(jenisError), 
-'tps' : str(TPS), 
-'errors': [
-     {
-        "errorCode": 400,
-        "total": error400
-    },
-     {
-        "errorCode": 401,
-        "total": error401
-    },
-     {
-        "errorCode": 402,
-        "total": error402
-    },
-     {
-        "errorCode": 403,
-        "total": error403
-    },
-     {
-        "errorCode": 404,
-        "total": error404
-    },
-     {
-        "errorCode": 405,
-        "total": error405
-    },
-     {
-        "errorCode": 406,
-        "total": error406
-    },
-     {
-        "errorCode": 407,
-        "total": error407
-    },
-     {
-        "errorCode": 408,
-        "total": error408
-    },
-     {
-        "errorCode": 409,
-        "total": error409
-    },
-    {
-        "errorCode": 410,
-        "total": error410
-    },
-    
-    {
-        "errorCode": 502,
-        "total": error502
-    },
-     {
-        "errorCode": "nonHTTP",
-        "total": 0
-    }
-]
-    },
-    
     # Serializing json 
-    json_object = json.dumps(dictionary, indent = 10)
+    json_object = json.dumps(dictionary_json, indent = 10)
     
     #Append to .json file
     filename = "Results.json"
     with open(filename , "a") as outfile:
         outfile.write(json_object)
     
-    #Make Results.html file
-    a = {
-	str(i+1) : [str(namaFile), str(banyakRequest), str(totalRequestBerhasil), str(totalRequestGagal), str(TotalHit), str(TPS), str(jenisError)] 
-    }
-
-    data = ""
-    for k in a:
-        data += "<td width = 200px>" + k + "</td>"
-        for d in a[k]:
-            data += "<td width = 200px>" + d + "</td width>"
-        data += "<tr width = 200px>"
-
-
-
-    
-    data = "<table border=1;>" + data + "<table>"
-    with open("Results.html", "a") as file:
-        file.write(data)
-
+    with open('Results.csv', mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(dictionary_csv)
