@@ -25,20 +25,13 @@ ErrorCount = []
 jenisError = []
 time = int (0)
 TPS = int(0)
+listErrorCounter = []
+errorRate = int()
 
 #Pointer untuk cek element dalam list
 pointerX = str()
 TotalHit = str()
-error400 = int(0)
-error401 = int(0)
-error402 = int(0)
-error403 = int(0)
-error404 = int(0)
-error405 = int(0)
-error406 = int(0)
-error407 = int(0)
-error408 = int(0)
-error409 = int(0)
-error410 = int(0)
-error502 = int(0)
-errornonHTTP = int(0)
+
+#Save data format json dan csv
+headerList = ['name', 'totalRequest', 'totalSuccessRequest', 'totalFailedRequest', 'totalError', 'totalHit', 'jenisError', 'TPS', 'successRate', 'failureRate']
+data_csv = []
