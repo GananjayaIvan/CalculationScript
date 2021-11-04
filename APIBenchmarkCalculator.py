@@ -4,9 +4,11 @@ result = glob.glob('*.{}'.format(extension))
 banyakData = int(len(result))
 
 os.chdir(path_result)
+
 for i in range (0,banyakData):
     os.chdir(path)
-    print(" ========================  Hasil Calculation ======================== " + result[i])
+    print(result[i])
+    print(" ========================  Hasil Calculation ======================== ")
     #TotalRequest
     banyakRequest = 0
     with open(result[i], 'r') as csv_file:
@@ -73,20 +75,21 @@ for i in range (0,banyakData):
             x = line[0]
             listTimeStamp.append(x)
     csv_file.close()
-
     #Delete index 0 karena index 0 pada csv outputnya adalah "timeStamp"
     del listTimeStamp[0]
     listTimeStamp = [int(i) for i in listTimeStamp]
     maximum = max(listTimeStamp)
     minimum = min(listTimeStamp)
     #Timestamp formatnya adalah unix, mili second
-    time = maximum - minimum
-    time = time/1000
-    if time == 0:
-        time = 1
+    durationTest = maximum - minimum
+    durationTest = durationTest/1000
+    if durationTest == 0:
+        durationTest = 1
     transaction = lines
-    TPS = banyakRequest/time
+    TPS = banyakRequest/durationTest
     
+    #errorRate
+    errorRate = (totalError / banyakRequest) * 100
 
     #PrintOutput
     print('Total Request yang ditemukan : ' + str(banyakRequest))
@@ -96,6 +99,10 @@ for i in range (0,banyakData):
     print('Jenis Error yang ditemukan : ' + str(jenisError))
     print('Total Error yang ditemukan : ' + str(totalError))
     print('Transaction per Second : ' + str(TPS))
+    print('Success Rate : ' + str(successRate) + '%')
+    print('Failure Rate : ' + str(failureRate) + '%')
+    print('DurationTest : ' + str(durationTest) + ' seconds ')
+    print('ErrorRate : ' + str(errorRate) + " %")
     print("\n")
 
 
@@ -125,14 +132,20 @@ for i in range (0,banyakData):
                 ErrorCount.append(pointerX)
         listError = (Counter(ErrorCount))
         if(len(listError) != 0):
-            print("==========Error Counter==========")
+            listErrorCounter = []
+            print("========= Error Counter ==========")
             for key, value in listError.items():
-                print ("Error Code: " + str(key) + " Error Counted: " + str(value))
+                string1 = str()
+                string2 = str()
+                string1 = str(key)
+                string2 = str(value)
+                print ("{Code: " + string1 + " \n " + "Count: " + string2 + "}")
+                listErrorCounter.append("{ Code: " + string1 + "," + " Count: " + string2 + "}")
         print("\n")
     csv_file.close()
 
     #Dictionary yang akan di save ke json dan csv
-    dictionary_json ={
+    dictionary ={
     'name' : str(namaFile),
     'totalRequest' : str(banyakRequest), 
     'totalSuccessRequest' : str(totalRequestBerhasil), 
@@ -143,32 +156,23 @@ for i in range (0,banyakData):
     'tps' : str(TPS), 
     'successRate' : str(successRate) + '%',
     'failureRate' : str(failureRate)+ '%',
+    'errorRate': str(errorRate)+ '%',
+    'durationTest' : str(durationTest) + ' seconds ',
     'errors': [
-    listError
+        listErrorCounter
     ]
         },
 
-    dictionary_csv ={
-    'name' : str(namaFile),
-    'totalRequest' : str(banyakRequest), 
-    'totalSuccessRequest' : str(totalRequestBerhasil), 
-    'totalFailedRequest' : str(totalRequestGagal), 
-    'totalError' : str(totalError), 
-    'totalHit' : str(TotalHit), 
-    'jenisError' : str(jenisError), 
-    'tps' : str(TPS), 
-        },
-
-
     os.chdir(path_result)
     # Serializing json 
-    json_object = json.dumps(dictionary_json, indent = 10)
+    json_object = json.dumps(dictionary, indent = 5, separators=(',', ':'))
     
     #Append to .json file
     filename = "Results.json"
     with open(filename , "a") as outfile:
         outfile.write(json_object)
     
+    #Save to csvFiles
     with open('Results.csv', mode='a', newline='') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow(dictionary_csv)
+        writer = csv.writer(csv_file)
+        writer.writerow(dictionary)
