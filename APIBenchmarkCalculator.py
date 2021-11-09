@@ -5,6 +5,14 @@ banyakData = int(len(result))
 
 os.chdir(path_result)
 
+#Save to csvFiles
+csvHeaderWriter = open("Results.csv", "w")
+writer = csv.DictWriter(
+    csvHeaderWriter, fieldnames=['name', 'totalRequest', 'totalSuccessRequest' , 'totalFailedRequest' , 'totalError' , 'totalHit' , 'jenisError', 'TransactionPerSecond' , 'successRate' , 'failureRate' , 'durationTest' , 'errors', 'responseTime' ]
+    )
+writer.writeheader()
+csvHeaderWriter.close()
+
 for i in range (0,banyakData):
     os.chdir(path)
     print(result[i])
@@ -22,6 +30,8 @@ for i in range (0,banyakData):
     #RequestBerhasildanGagal
     totalRequestBerhasil = 0
     totalRequestGagal = 0
+    successRate = 0
+    failureRate = 0
     with open(result[i], 'r') as csv_file:
         csv_reader = csv.reader (csv_file)
         #Karena nilai success true or false, bisa tinggal di cek input datanya true or false, kemudian memakai looping untuk menghitungnya
@@ -78,10 +88,11 @@ for i in range (0,banyakData):
     #Delete index 0 karena index 0 pada csv outputnya adalah "timeStamp"
     del listTimeStamp[0]
     listTimeStamp = [int(i) for i in listTimeStamp]
-    maximum = max(listTimeStamp)
-    minimum = min(listTimeStamp)
+    maximumTimeStamp = max(listTimeStamp)
+    minimumimeStamp = min(listTimeStamp)
     #Timestamp formatnya adalah unix, mili second
-    durationTest = maximum - minimum
+    durationTest = 0
+    durationTest = maximumTimeStamp - minimumimeStamp
     durationTest = durationTest/1000
     if durationTest == 0:
         durationTest = 1
@@ -89,21 +100,38 @@ for i in range (0,banyakData):
     TPS = banyakRequest/durationTest
     
     #errorRate
+    errorRate = 0
     errorRate = (totalError / banyakRequest) * 100
 
-    #PrintOutput
-    print('Total Request yang ditemukan : ' + str(banyakRequest))
-    print('Total Request Berhasil : ' + str(totalRequestBerhasil))
-    print('Total Request Gagal : ' + str(totalRequestGagal))
-    print("Total Hit pada Report : " + str(TotalHit))
-    print('Jenis Error yang ditemukan : ' + str(jenisError))
-    print('Total Error yang ditemukan : ' + str(totalError))
-    print('Transaction per Second : ' + str(TPS))
-    print('Success Rate : ' + str(successRate) + '%')
-    print('Failure Rate : ' + str(failureRate) + '%')
-    print('DurationTest : ' + str(durationTest) + ' seconds ')
-    print('ErrorRate : ' + str(errorRate) + " %")
-    print("\n")
+    #Response Time
+    listResponseTime = []
+    pointerX = ()
+    TotalResponseTime = 0
+    
+    with open(result[i], 'r') as csv_file:
+
+
+    #Membuat List baru untuk Elapsed (ResponseTime)
+        minimumResponseTime = 0
+        maximumResponseTime = 0
+        averageResponseTime = 0
+        csv_reader = csv.reader (csv_file)
+        for line in csv_reader:
+            pointerX = line[1]
+            listResponseTime.append(pointerX)
+        #Delete index 0 karena index 0 pada csv outputnya adalah "allThreads"
+        del listResponseTime[0]
+        #Konversi menjadi int
+        listResponseTime = [int(i) for i in listResponseTime]
+        #ResponseTime min max
+        minimumResponseTime = min(listResponseTime)
+        maximumResponseTime = max(listResponseTime)
+        #Average
+        TotalResponseTime = sum (listResponseTime)
+        averageResponseTime = TotalResponseTime/banyakRequest
+
+
+    csv_file.close()
 
 
     #Jenis Error
@@ -144,6 +172,23 @@ for i in range (0,banyakData):
         print("\n")
     csv_file.close()
 
+    #PrintOutput
+    print('Total Request yang ditemukan : ' + str(banyakRequest))
+    print('Total Request Berhasil : ' + str(totalRequestBerhasil))
+    print('Total Request Gagal : ' + str(totalRequestGagal))
+    print("Total Hit pada Report : " + str(TotalHit))
+    print('Jenis Error yang ditemukan : ' + str(jenisError))
+    print('Total Error yang ditemukan : ' + str(totalError))
+    print('Transaction per Second : ' + str(TPS))
+    print('Success Rate : ' + str(successRate) + '%')
+    print('Failure Rate : ' + str(failureRate) + '%')
+    print('DurationTest : ' + str(durationTest) + ' seconds ')
+    print('ErrorRate : ' + str(errorRate) + " %")
+    print('Minimum Response Time: ' + str(minimumResponseTime))
+    print('Maximum Response Time: ' + str(maximumResponseTime))
+    print('Average Response Time: ' + str(averageResponseTime))
+    print("\n")
+
     #Dictionary yang akan di save ke json dan csv
     dictionary ={
     'name' : str(namaFile),
@@ -153,15 +198,42 @@ for i in range (0,banyakData):
     'totalError' : str(totalError), 
     'totalHit' : str(TotalHit), 
     'jenisError' : str(jenisError), 
-    'tps' : str(TPS), 
+    'TransactionPerSecond' : str(TPS), 
     'successRate' : str(successRate) + '%',
     'failureRate' : str(failureRate)+ '%',
     'errorRate': str(errorRate)+ '%',
     'durationTest' : str(durationTest) + ' seconds ',
     'errors': [
         listErrorCounter
+    ],
+    'responseTime' : [
+        'Minimum Response Time : ' + str(minimumResponseTime) + " ms",
+        'Maximum Response Time : ' + str(maximumResponseTime) + " ms",
+        'Average Response Time : ' + str(averageResponseTime) + " ms",
     ]
         },
+
+    dictionaryCSV =(
+    str(namaFile),
+    str(banyakRequest), 
+    str(totalRequestBerhasil), 
+    str(totalRequestGagal), 
+    str(totalError), 
+    str(TotalHit), 
+    str(jenisError), 
+    str(TPS), 
+    str(successRate) + '%',
+    str(failureRate)+ '%',
+    str(errorRate)+ '%',
+    str(durationTest) + ' seconds ',
+    listErrorCounter,
+    [   
+        'Minimum : ' + str(minimumResponseTime) + " ms",
+        'Maximum : ' + str(maximumResponseTime) + " ms",
+        'Average : ' + str(averageResponseTime) + " ms",
+    ]
+    )
+        
 
     os.chdir(path_result)
     # Serializing json 
@@ -175,4 +247,4 @@ for i in range (0,banyakData):
     #Save to csvFiles
     with open('Results.csv', mode='a', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(dictionary)
+        writer.writerow(dictionaryCSV)
