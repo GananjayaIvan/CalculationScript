@@ -27,6 +27,9 @@ time = int (0)
 TPS = int(0)
 listErrorCounter = []
 errorRate = int()
+listResponseTime = []
+TotalResponseTime = int()
+averageResponseTime = int()
 
 #Pointer untuk cek element dalam list
 pointerX = str()
