@@ -104,12 +104,13 @@ for i in range (0,banyakData):
     durationTest = 0
     durationTest = maximumTimeStamp - minimumimeStamp
     durationTest = durationTest/1000
-    durationTest = "{:.2f}".format(durationTest)
     if durationTest == 0:
         durationTest = 1
+    
     transaction = lines
-    TPS = banyakRequest/durationTest
+    TPS = banyakRequest / durationTest
     TPS = "{:.2f}".format(TPS)
+    durationTest = "{:.2f}".format(durationTest)
     #errorRate
     errorRate = 0
     errorRate = (totalError / banyakRequest) * 100
