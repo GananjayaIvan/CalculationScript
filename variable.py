@@ -5,7 +5,6 @@ import sys
 import json
 import pandas as pd
 from collections import Counter
-from tabulate import tabulate
 
 #Directory read file dan result
 directory = os.path.dirname(os.path.abspath(__file__))
