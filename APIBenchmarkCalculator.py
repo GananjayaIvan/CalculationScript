@@ -2,8 +2,9 @@ from variable import *
 os.chdir(path)
 result = glob.glob('*.{}'.format(extension))
 banyakData = int(len(result))
-os.chdir(path_result)
 
+os.mkdir(path_result)
+os.chdir(path_result)
 file = open("ResultTable.html","w")
 file.write(htmlBegin)
 file.close()
@@ -33,6 +34,7 @@ for i in range (0,banyakData):
         lines = len(list(csv_reader)) - 1
         banyakRequest = lines
     csv_file.close()
+    namaFile = os.path.splitext(namaFile)[0]
 
     #RequestBerhasildanGagal
     totalRequestBerhasil = 0
@@ -221,7 +223,7 @@ for i in range (0,banyakData):
 
     #PrintOutput
     print('Total Request yang ditemukan : ' + str(banyakRequest))
-    print('Total Request Berhasil : ' + str(totalRequestBerhasil-1))
+    print('Total Request Berhasil : ' + str(totalRequestBerhasil))
     print('Total Request Gagal : ' + str(totalRequestGagal))
     print("Total Hit pada Report : " + str(TotalHit))
     print('Jenis Error yang ditemukan : ' + str(jenisError))
@@ -295,7 +297,9 @@ for i in range (0,banyakData):
     os.chdir(path_result)
     # Serializing json 
     json_object = json.dumps(dictionary, indent = 10, separators=(',', ':'))
+
     
+    os.chdir(path_result)
     #Append to .json file
     filename = "Results.json"
     with open(filename , "a") as outfile:
@@ -306,15 +310,13 @@ for i in range (0,banyakData):
             outfile.write(', \n')
         if i == banyakData-1:
             outfile.write(']')
-    
+
     #Save to csvFiles
     with open('Results.csv', mode='a', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(dictionaryCSV)
 
-
     #Save to HTML
-   
     with open("ResultTable.html","a") as file:
         file.write('<tr>' '<td>'+ str(namaFile) +'</td>' )
         file.write('<td>'+ str(banyakRequest) +'</td>')
@@ -338,11 +340,46 @@ for i in range (0,banyakData):
         file.write('<td>'+ str(Error505Count) +'</td>')
         file.write('<td>'+ str(ErrorNonHttpCount) +'</td>')
 
-    
-file = open("ResultTable.html","a")
-file.write(htmlClose)
-file.close()
+    path_File = path_result + '/' +namaFile
+    os.mkdir(path_File)
+    os.chdir(path_File)
+    file = open(namaFile + ".html","w")
+    file.write(htmlBegin)
+    file.close()
 
+    with open(namaFile + ".html","a") as file:
+        file.write('<tr>' '<td>'+ str(namaFile) +'</td>' )
+        file.write('<td>'+ str(banyakRequest) +'</td>')
+        file.write('<td>'+ str(totalRequestBerhasil) +'</td>')
+        file.write('<td>'+ str(totalRequestGagal) +'</td>')
+        file.write('<td>'+ str(totalError) +'</td>')
+        file.write('<td>'+ str(TotalHit) +'</td>')
+        file.write('<td>'+ str(TPS) +'</td>')
+        file.write('<td>'+ str(successRate)+'%'+'</td>')
+        file.write('<td>'+ str(errorRate) +'%'+'</td>')
+        file.write('<td>'+ str(durationTest) +'</td>')
+        file.write('<td>'+ str(Error400Count) +'</td>')
+        file.write('<td>'+ str(Error401Count) +'</td>')
+        file.write('<td>'+ str(Error403Count) +'</td>')
+        file.write('<td>'+ str(Error404Count) +'</td>')
+        file.write('<td>'+ str(Error409Count) +'</td>')
+        file.write('<td>'+ str(Error500Count) +'</td>')
+        file.write('<td>'+ str(Error502Count) +'</td>')
+        file.write('<td>'+ str(Error503Count) +'</td>')
+        file.write('<td>'+ str(Error504Count) +'</td>')
+        file.write('<td>'+ str(Error505Count) +'</td>')
+        file.write('<td>'+ str(ErrorNonHttpCount) +'</td>')
+
+    file = open("style.css","w")
+    file.write(cssText)
+    file.close()
+    
+    file = open(namaFile + ".html","a")
+    file.write(htmlClose)
+    file.close()
+    
+
+os.chdir(path_result)
 file = open("ResultTable.html","a")
 file.write(htmlClose)
 file.close()
