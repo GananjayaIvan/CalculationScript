@@ -1,14 +1,6 @@
 # CalculationScript
-
-
-
-Buat 2 buah folder dengan judul ".csv_files" dan "Result"
-
-
-Copy hasil benchmark jmeter ke folder dengan judul ".csv_files"
-
+Masukkan script ke dalam folder yang sama dengan csv file yang akan di calculate
 
 Jalankan script python
 
-
-Hasil akan di save di folder Result dengan extension .html dan .json
+Hasil akan di generate dalam bentuk html, csv, dan json, akan di auto generate folder sesuai dengan nama file yang di calculate
