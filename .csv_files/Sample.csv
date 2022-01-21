@@ -1,2 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1633534282816,48,sample,200,OK,REKON 1-1,text,true,,835,3116,1,1,sample-url,48,0,14
