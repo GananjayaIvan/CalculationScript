@@ -7,11 +7,13 @@ import pandas as pd
 from collections import Counter
 
 #Directory read file dan result
-directory = os.path.dirname(os.path.abspath(__file__))
-path = directory + '/.csv_files'
-path_result = directory + '/Result'
-extension = 'csv'
 namaFile = str()
+directory = os.path.dirname(os.path.abspath(__file__))
+path = directory
+path_result = directory + '/Result'
+path_File = path_result + namaFile
+extension = 'csv'
+
 
 
 #Variable yang digunakan dalam calculation
@@ -120,5 +122,3 @@ table, th, td { border: 1px solid black; border-collapse: collapse; }
 th { font-weight: bold; text-align: center; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 22;   padding: 8px; background-color: #333; color: white; }
 table { width: 100%; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 22;  padding: 8px;}
 '''
-
-
