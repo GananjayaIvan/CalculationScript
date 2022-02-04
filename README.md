@@ -39,3 +39,4 @@ Apabila image sudah dapat dijalankan, run container dengan command
 Container akan dibuat dengan menggunakan image yang telah dibuat
 
 Untuk menjalankan container, masukkan command
+$docker-compose up -d --no-deps --build calculationscript
