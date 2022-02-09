@@ -42,4 +42,4 @@ Untuk menjalankan command dalam container, masukkan command :
 $ docker exec -it 'container ID' /bin/sh
 
 Setelah masuk ke dalam container, masukkan command 
-#python script.pt
+#python script.py
