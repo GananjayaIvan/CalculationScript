@@ -36,13 +36,10 @@ $ sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker
 
 8.	Setelah masuk ke dalam container, masukkan command 
 
-
           #python script.py
 
 
-10.	Kemudian bisa di cek html report pada directory yang dimasukkan pada environment variable
-
-==================================================================================================================
+9.	Kemudian bisa di cek html report pada directory yang dimasukkan pada environment variable.
 
 Cara Setup Nginx  
 Command yang digunakan 
@@ -64,9 +61,7 @@ Mengecek apabila ufw status sudah running
 $ systemctl status nginx 
 
 
-
 Expose html dengan menggunakan nginx 
-
 
 Buka directory  
 etc/nginx/sites-enabled 
@@ -92,4 +87,3 @@ index index.html;
  	} 
  
 Kemudian bisa di test dengan socket 8888 pada local host pada browser 
-
