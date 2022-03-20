@@ -16,8 +16,6 @@ banyakData = int(len(result))
 
 
 
-
-
 os.mkdir(path_result)
 
 
@@ -88,14 +86,14 @@ csvHeaderWriter.close()
 
 
 
-
-
 for i in range (0,banyakData):
 
 
 
     os.chdir(path)
-
+    files =  os.listdir()
+    sorted_files =  sorted(files)
+    namaFile = sorted_files[i]
 
 
     #TotalRequest
@@ -106,12 +104,7 @@ for i in range (0,banyakData):
 
 
 
-    with open(result[i], 'r') as csv_file:
-
-
-
-        namaFile = result[i]
-
+    with open(namaFile, 'r') as csv_file:
 
 
         csv_reader = csv.reader (csv_file)
@@ -1451,6 +1444,5 @@ print('File read from Directory  :' + path)
 
 
 print('File Written in Directory :' + path_result)
-
 
 

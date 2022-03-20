@@ -4,7 +4,7 @@ version: '3.4'
 
 services:
 
-  calculationscript:
+  jmeter_generator:
 
     image: jmeter_generator
 
@@ -17,6 +17,4 @@ services:
     command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 script.py "]
 
     ports:
-
       - 5678:5678
-

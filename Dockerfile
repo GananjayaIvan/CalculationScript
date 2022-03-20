@@ -22,17 +22,14 @@ ENV PYTHONUNBUFFERED=1
 
 RUN python -m pip install pandas
 
-
-
-RUN mkdir -p /jmeter_generator
-
 WORKDIR /jmeter_generator
 
 COPY . /jmeter_generator
+
+RUN mkdir -p /Documents/Docker_Volume
 
 
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 
 CMD ["python", "script.py"] ;
-

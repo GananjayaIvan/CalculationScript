@@ -1,10 +1,10 @@
-version: "3.4"
+version: '3.4'
 
 
 
 services:
 
-  calculationscript:
+  jmeter_generator:
 
     image: jmeter_generator
 
@@ -16,8 +16,6 @@ services:
 
     volumes:
 
-      - ./data:/root/jmeter_generator
-
-
+      - ./data:/home/ivangananjaya/Documents/Docker_Volume
 
     command: tail -F anything
