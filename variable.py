@@ -1,14 +1,21 @@
+import os
 import glob
 import csv
 import sys 
 import json
 import pandas as pd
+import datetime as dt
 from collections import Counter
-from directory_generator import *
+from fastapi import FastAPI
 
 #Directory read file dan result
 namaFile = str()
-path_File = path_result + namaFile
+date = str()
+listData123 = str()
+directory = os.path.dirname(os.path.abspath(__file__))
+path = directory + "/ResultPerformanceTesting" + namaFile
+path_result = directory + '/Result'
+path_File = path + "ResultPerformanceTesting" + namaFile
 extension = 'csv'
 
 
@@ -19,7 +26,6 @@ banyakRequest = int(0)
 totalRequestBerhasil = int(0)
 totalRequestGagal = int(0)
 nonErrorResponseCode = ('responseCode','100', '101', '102', '103', '200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305' , '306', '307', '308')
-httpSuccessReturnCode = ('responseCode','100', '101', '102', '103', '200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305' , '306', '307', '308', '400','401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417', '418', '421', '422' , '423', '424', '425', "426", "428", "429", "431", "451")
 returnCode = str()
 totalError = int(0)
 ErrorCount = []
