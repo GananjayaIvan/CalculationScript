@@ -29,12 +29,13 @@ for i in range (0,banyakData):
     files =  os.listdir()
     sorted_files =  sorted(files)
     #File yang telah di sort, namanya akan dimasukan ke variable namaFile
-    namaFile = sorted_files[i]    
+    namaFile = sorted_files[i]
     
     #TotalRequest
     banyakRequest = 0
     with open(namaFile, 'r') as csv_file:
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0) (csv_file)
+        df = pd.DataFrame(csv_reader)
         #Menghitung jumlah total request yang ditembakan oleh jmeter, yang dihitung adalah length dari list
         lines = len(list(csv_reader)) - 1
         banyakRequest = lines
@@ -48,7 +49,7 @@ for i in range (0,banyakData):
     failureRate = 0
 
     with open(result[i], 'r') as csv_file:
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0) (csv_file)
         #Karena nilai success true or false, di cek apakah input ada di nonErrorResponseCode atau tidak, kemudian memakai looping untuk menghitungnya
         for row in csv_reader:
             returnCode = row[3]
@@ -67,7 +68,7 @@ for i in range (0,banyakData):
     #TotalError
     totalError = 0
     with open(result[i], 'r') as csv_file:
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0)(csv_file)
         #Function untuk membuat isi data unique
         for row in csv_reader:
             if row[3] not in nonErrorResponseCode:
@@ -81,7 +82,7 @@ for i in range (0,banyakData):
     with open(result[i], 'r') as csv_file:
         
     #Membuat List baru untuk All Threads
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0)(csv_file)
         for line in csv_reader:
             pointerX = line[12]
             listAllThreads.append(pointerX)
@@ -108,7 +109,7 @@ for i in range (0,banyakData):
 
     #Membuat List baru untuk TimeStamp
     
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0)(csv_file)
         next(csv_reader, None)
         for line in csv_reader:
             x = line[0]
@@ -116,7 +117,7 @@ for i in range (0,banyakData):
             listTimestamp = listTimeStamp.append(x)
     csv_file.close()
     with open(result[i], 'r') as csv_file:
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0)(csv_file)
         for row in csv_reader:
             lastLineElapsedTime = row[1]
  
@@ -148,7 +149,7 @@ for i in range (0,banyakData):
         minimumResponseTime = 0
         maximumResponseTime = 0
         averageResponseTime = 0
-        csv_reader = csv.reader (csv_file)
+        csv_reader = csv.reader.dropna(axis=0)(csv_file)
 
         for line in csv_reader:
             pointerX = line[1]
@@ -382,5 +383,4 @@ file.close()
 
 print('File read from Directory  :' + path)
 print('File Written in Directory :' + path_result)
-
 
