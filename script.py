@@ -128,6 +128,7 @@ for i in range (0,banyakData):
         durationTest = 1
 
     #Convert to Date Time
+    durationTest = 0
     durationTest = (maximumTimeStamp-minimumTimeStamp)
     #Harus dibagi 1000 agar bisa di konversikan
     minimumTimeStamp = minimumTimeStamp/1000
@@ -135,7 +136,7 @@ for i in range (0,banyakData):
     
 
     transaction = lines
-    TPS = banyakRequest / (durationTest) * 1000
+    TPS = totalRequestBerhasil / (durationTest) * 1000
     TPS = float(TPS)
 
 
